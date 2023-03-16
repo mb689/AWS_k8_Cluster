@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: node-app
+spec:
+  selector:
+    matchLabels:
+      app: node-app
+
+  replicas: 3
+
+  template:
+    metadata:
+      labels:
+        app: node-app
+
+    spec:
+      containers:
+      - name: node-app
+        image: mb2214/launch-app-docker:version-1
+        ports:
+        - containerPort: 3000
+        
+        env:
+        - name: DB_HOST
+          value: "mongodb://mongo:27017/posts"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["node", "seeds/seed.js"]
